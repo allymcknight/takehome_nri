@@ -64,9 +64,7 @@ NUM_QUESTIONS = int(sys.argv[1])
                     
 #     print question_tree
 
-strands = []
-standards = []
-questions = []
+
 
 set_strands = []
 
@@ -80,13 +78,51 @@ class Question(object):
 
 def retrieve_questions(num, filename):
     questions = []
+    strands = set()
+
 
     quest_file = open(filename, 'r').readlines()[1:]
-    for row in questions:
+    for row in quest_file:
         row = row.strip()
         items = row.split(',')
         question = Question(items[0], items[2], items[4], items[5])
+
+        strands.add(items[0])
+
+
         questions.append(question)
+
+    
+    strands = list(strands)
+    strand_cat = []
+    cycled_strands = cycle(strands)
+    seen = set()
+    for i in range(num):
+
+        current_strand = cycled_strands.next()
+ 
+        for question in questions:
+            if question.strand == current_strand and question not in seen:
+                strand_cat.append(question)
+                seen.add(question)
+                break
+
+
+    standards = set()
+
+    stan_cat = []
+
+
+    question_ids = []
+    result = strand_cat[0].question
+
+    for question in strand_cat[1:]:
+        result += "," + question.question
+    print result
+
+
+
+
 
 
 
